@@ -1,0 +1,247 @@
+#include <stdio.h>
+#include <iostream>
+#include <stdlib.h >
+# include <conio.h>
+using namespace std;
+/* run this program using the console pauser or add your own getch, system("pause") or input loop */
+/*1.Agregarequipo
+2.Eliminarequipo
+3.Verequipos
+0.Salir
+Elija una opción:*/
+struct Equipo{
+	char identificador[3];
+	char nombre [32];
+	int PotenciaAtaque;
+	int PotenciaDefensa;
+	} Allboys;
+
+/*void Ordenar(Equipo equipo[100])  ordenaba los equipos si habia posicion vacia ponia la siguiente, no funciona
+	{
+		cout<<"entro";
+		for(int i=0;i<100;i++)
+		{
+			for(int j=1;j<100;j++)
+			{
+				if(equipo[i].PotenciaAtaque == 0)
+				{
+					 for(int k=0;i<31;i++)
+					 {
+					 	equipo[i].nombre[k]=equipo[j].nombre[k];
+					 }
+					 
+					 equipo[i].PotenciaAtaque = equipo[j].PotenciaAtaque;
+					 equipo[i].PotenciaDefensa = equipo[j].PotenciaDefensa;
+					 
+					 for(int n=0;n<3;n++)
+					 {
+					 	equipo[i].identificador[n]=equipo[j].identificador[n];
+					 }
+				}
+			}
+		}
+		
+	}*/
+void MostrarEquipo(Equipo equipo,int i) //muestra equipo
+{
+	int a;
+
+cout<<equipo.identificador<<"	"<<equipo.nombre<<" ("<<equipo.PotenciaAtaque<<"-"<<equipo.PotenciaDefensa<<"\n";
+//cout<<""<<equipo.nombre<<"		"<<equipo.identificador<<"			"<<equipo.PotenciaAtaque<<"		"<<equipo.PotenciaDefensa<<"\n";
+
+}
+void VerEquipos(Equipo equipo[100],int cont)//muestra  todos lo equipos
+{
+	int i;
+	for(i=0;i<cont;i++)
+	{
+		if(equipo[i].PotenciaAtaque!= 0)
+		{
+				
+		MostrarEquipo(equipo[i],i);
+		}
+	}
+}
+void AgregarEquipos(Equipo equipo[100],char identificador[3],char nombre[32], int ataque, int defensa,int cont, FILE *doc)//identificador solo toma 2 letras nose por que
+	{
+	
+		
+		for(int i=0;i<=3;i++)
+		{
+		equipo[cont].identificador[i]=identificador[i];
+		
+		
+		}
+		
+		for(int j=0;j<=31;j++)
+		{
+		equipo[cont].nombre[j]=nombre[j];
+		}
+		equipo[cont].PotenciaAtaque=ataque;
+		equipo[cont].PotenciaDefensa=defensa;
+		
+		system("cls");
+		
+		fprintf(doc,"%s ",equipo[cont].nombre);
+		fprintf(doc,"%s ",equipo[cont].identificador);
+		fprintf(doc,"%d ",ataque);
+		fprintf(doc,"%d ",defensa);
+		
+		cout <<"\nEQUIPO AGREGADO CORRECTAMENTE \n";
+	}
+int equal(char a , char b) //metodo para comparar letra
+	{
+		if(a==b)
+		{
+		
+		return 1;
+	}
+	else {
+		return 0;
+	}
+	}
+int Comparar(char identificador[3], Equipo equipo[100], int cont )// utiliza para buscar el identificador ingresado para eliminar
+{	
+	/*cout<<"\n Identificador "<<identificador;
+	cout<<"\n contador "<<cont;
+	cout<<"\n equipo Identificador "<<equipo[cont].identificador<<"\n ";
+	*/
+	for(int i=0;i<=cont;i++)
+	{
+		
+	if(equal(identificador[0],equipo[i].identificador[0])==1)
+		{
+			if(equal(identificador[1],equipo[i].identificador[1])==1)
+			{
+				if(equal(identificador[2],equipo[i].identificador[2])==1)
+				{
+				
+						return i;
+						break;
+				}
+			}
+			
+		}	
+	
+		
+		
+		
+	}
+return -1;
+	
+}
+void EliminarEquipos(char identificador1[3], Equipo equipo[100] , int cont) //elimina equipo
+	{
+		int cont1=cont-1;
+		int posicion=Comparar(identificador1,equipo,cont1);
+			
+		if(posicion!=-1)
+		{
+			
+			equipo[posicion].PotenciaAtaque=0;
+			equipo[posicion].PotenciaDefensa=0;
+			
+			
+			for(int j=0;j<31;j++)
+			{
+			equipo[posicion].nombre[j]=' ';
+			}
+			for(int i=0;i<3;i++)
+			{
+			equipo[posicion].identificador[i]=' ';
+			}
+			printf("\nEquipo eliminado");
+		}
+		else
+		{
+			printf("\nNo esxiste el equipo");
+		}
+	
+	
+	
+	//Ordenar(equipo);
+	}
+
+
+int main(int argc, char** argv) {
+		
+		FILE *doc;
+		doc = fopen("prueba.txt","a");
+		
+		FILE *leer;
+		leer = fopen("prueba.txt","a");
+		
+		Equipo equipo[100];
+	//Menu(equipo);
+		int opcion=1;
+		char identificador [3];
+		char identificador1[3];
+		char nombre [32];
+		int ataque;
+		int defensa;
+		int cont=0;
+	
+	while (opcion!=0){
+	printf("\n1.Agregar Equipo\n 2.Eliminar Equipo\n 3.Ver equipos \n 0.Salir \n\nIngrese opcion: ");
+	scanf("%d", &opcion);
+	
+	switch (opcion)
+		{	
+			case 1: printf("\nIngrese Nombre: ");
+					cin >>nombre;
+					
+					printf("\nIngrese Identificador: ");
+					cin >>identificador;
+					
+					printf("\nIngrese Potencia de Ataque de 0 a 100: ");
+					scanf("%d", &ataque);
+					
+					while (ataque<0 || ataque>100 )
+						{	
+						
+							printf("\nIngrese Potencia de Ataque de 0 a 100: ");
+							scanf("%d", &ataque);
+						}
+					printf("\nIngrese Potencia de Defensa de 0 a 100: ");
+					scanf("%d", &defensa);
+					while (defensa<0 || defensa>100 )
+						{	
+						
+							printf("\nIngrese Potencia de Defensa de 0 a 100:  ");
+							scanf("%d", &defensa);
+						}
+					
+					
+					AgregarEquipos(equipo, identificador, nombre, ataque,defensa,cont,doc);
+					
+					
+									
+					
+					
+					cont++;
+					break;
+			case 2:
+			
+					printf("\nIngrese Identificador Equipo que desea eliminar:  ");
+					cin>>identificador1;
+					//Comparar(identificador1,equipo,cont);
+					EliminarEquipos(identificador1,equipo,cont);
+					
+					break;
+			case 3: 
+					
+					printf("\nLista de Equipos\n");
+					
+					VerEquipos(equipo, cont);
+			
+			
+					break;
+			case 0: 
+						fclose(doc);
+						break;
+			default:
+				cout<<"\nerror";
+		}
+	}
+	return 0;
+}	
